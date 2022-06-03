@@ -1,0 +1,38 @@
+chmod 400 <pem file>
+
+ssh -i labsuser.pem ubuntu@107.20.85.160
+
+sudo apt install openjdk-11-jre-headless
+
+curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+
+--go to brower and the http://107.20.85.160:8080/
+
+sudo systemctl status jenkins
+
+systemctl cat jenkins -- for more info
+
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword -- to get auto generated initialAdminPassword
+
+sudo apt update
+sudo apt install openjdk-11-jre
+sudo apt install openjdk-11-jdk
+
+
+cd /home/ubuntu/javasample
+sudo javac helloworld.java
+java helloworld
+
+
+jenkins ALL=(ALL) NOPASSWD: ALL
+
+sudo cat /etc/sudoers
+
+--to copy files
+cp -r SOURCEFILE TARGETFILE
