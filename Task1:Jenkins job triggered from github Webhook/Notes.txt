@@ -34,8 +34,11 @@ cd /home/ubuntu/javasample
 sudo javac helloworld.java
 java helloworld
 
-
+sudo vi /etc/sudoers
+--paste it at the end
 jenkins ALL=(ALL) NOPASSWD: ALL
+
+wq!
 
 sudo cat /etc/sudoers
 

@@ -1,0 +1,150 @@
+Ref : https://www.blazemeter.com/blog/how-to-integrate-your-github-repository-to-your-jenkins-project
+Ref : https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu
+Ref : https://www.cherryservers.com/blog/how-to-install-and-setup-postgresql-server-on-ubuntu-20-04
+
+chmod 400 <pem file>
+
+ssh -i labsuser.pem ubuntu@3.93.65.239
+
+sudo apt update
+sudo apt install openjdk-11-jre -y
+sudo apt update
+sudo apt install openjdk-11-jdk -y
+sudo apt update
+
+curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins -y
+
+
+-- to get auto generated initialAdminPassword
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+--add this on the github webhook
+--<jenkinsURL>/github-webhook/
+http://3.83.48.113:8080/github-webhook/
+
+
+
+--install dotnet
+
+wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+
+sudo apt-get update; \
+  sudo apt-get install -y apt-transport-https && \
+  sudo apt-get update && \
+  sudo apt-get install -y dotnet-sdk-6.0
+
+sudo apt-get update; \
+  sudo apt-get install -y apt-transport-https && \
+  sudo apt-get update && \
+  sudo apt-get install -y aspnetcore-runtime-6.0
+
+
+
+--install postgresql
+
+sudo apt install wget ca-certificates
+
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+--set password for postgres
+sudo -u postgres psql
+
+\l
+\du
+
+\password postgres
+admin
+admin
+
+env NUGET_PACKAGES=/home/NugetPackageCache
+
+
+--dotnet build
+
+cd ./TheBankMVC
+sudo dotnet restore TheBankMVC.sln
+sudo dotnet build TheBankMVC.sln --no-restore
+
+
+--dotnet deploy
+
+cd ./TheBankMVC
+dotnet publish TheBankMVC.sln --self-contained --output ~/squad --no-build
+
+cd ./TheBankMVC
+sudo dotnet MSBuild /t:restore
+sudo nuget restore TheBankMVC.sln
+sudo dotnet build TheBankMVC.sln
+
+cd ./TheBankMVC
+sudo dotnet MSBuild /t:restore
+sudo nuget restore BudgetManager.csproj
+sudo dotnet build BudgetManager.csproj
+
+
+
+-- setup supervisord for hosting
+
+sudo yum install supervisor -y
+cd /etc/supervisor
+sudo vi /conf.d/squadwebapp.conf
+
+--populate the file
+[program:squadwebapp]
+command=dotnet BudgetManager.dll
+directory=/home/anshul/squad/
+environment=ASPNETCORE__ENVIRONMENT=Development
+user=root
+stopsignal=INT
+autostart=true
+autorestart=true
+startsecs=1
+stderr_logfile=/var/log/squadwebapp.err.log
+stdout_logfile=/var/log/squadwebapp.out.log
+
+
+:wq!
+
+sudo cp supervisord.conf supervisord.conf.bak
+sudo vi supervisord.conf
+
+--go to this line
+files = supervisord.d/*.ini
+
+--and update it
+files = supervisord.d/*.conf
+:wq!
+
+sudo systemctl start supervisor.service
+sudo systemctl enable supervisor.service
+
+sudo supervisorctl reread
+sudo supervisorctl update
+
+sudo supervisorctl status
+
+
+sudo apt install nuget -y
+
+sudo find / -name "NugetPackageCache" -type d
+
+
+sudo vi /etc/sudoers
+--paste it at the end
+jenkins ALL=(ALL) NOPASSWD: ALL
+
+wq!
+
+sudo cat /etc/sudoers

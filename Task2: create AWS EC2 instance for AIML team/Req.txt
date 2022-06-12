@@ -1,0 +1,20 @@
+1. Technology, 
+2. Trained data model, 
+3. The input resources you use and 
+4. Output data(db details, data format) 
+5. They will produce Requirement Gathering and update in the requirement document. 
+6. Then setup our CI/CD pipeline and create docker image if anything is completed from AIML team.
+
+
+11-jun
+
+Technology (Will be finalized by today)
+    pandas and scipy
+
+Approach Will be finalized by today)
+    Will be using tags on Articles to suggest related articles
+    Tags: politices and hollywood etc.
+
+Git Repository: Not yet created
+
+Reference project: https://github.com/kishan0725/AJAX-Movie-Recommendation-System-with-Sentiment-Analysis
