@@ -1,0 +1,21 @@
+1. Create a Group
+    devopsgrp
+
+2. Create Role
+    devopsrole
+
+3. Create User
+    devopsgrp/devopspass
+
+4. Map the User to the Group
+    devopsuser under devopsgrp
+
+5. Add permission to Role
+    AmazonS3FullAccess
+    AmazonEC2FullAccesss
+
+
+
+----------------------------------------
+
+1. Create a role
